@@ -1,7 +1,7 @@
-const hauts=["T-shirt","Hoodie","Blazer"];
-const bas=["Jean","Cargo","Short"];
-const fonds=["Studio","Plage","Rooftop"];
-const angles=["Face","Profil","3/4"];
+loadOptions("haut","hauts");
+loadOptions("bas","bas");
+loadOptions("fond","fonds");
+loadOptions("angle","angles");
 
 /* Remplir les selects */
 
