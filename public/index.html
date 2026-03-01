@@ -10,6 +10,8 @@
 
 <style>
 
+/* ================= BODY ================= */
+
 body{
 margin:0;
 overflow:hidden;
@@ -17,7 +19,7 @@ background:radial-gradient(circle at center,#0f7a2d,#063d17);
 font-family:'Montserrat',sans-serif;
 }
 
-/* TITRE */
+/* ================= TITRE ================= */
 
 .title{
 font-family:'Bungee',cursive;
@@ -33,7 +35,25 @@ from{text-shadow:0 0 20px yellow;}
 to{text-shadow:0 0 60px lime;}
 }
 
-/* CONTAINER */
+/* Néon sous le titre */
+
+.title::after{
+content:"";
+display:block;
+width:60%;
+height:8px;
+margin:20px auto 0 auto;
+background:linear-gradient(90deg,yellow,red,yellow);
+filter:blur(15px);
+animation:neonMove 3s infinite alternate;
+}
+
+@keyframes neonMove{
+from{opacity:0.5;}
+to{opacity:1;}
+}
+
+/* ================= CONTAINER ================= */
 
 .container{
 position:relative;
@@ -41,19 +61,22 @@ z-index:10;
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:30px;
-margin-top:20px;
+justify-content:center;
+gap:25px;
+width:100%;
 }
 
-/* LIGNE MENU + BOUTON RANDOM */
+/* Ligne menu + bouton random */
 
 .menu-line{
 display:flex;
 align-items:center;
-gap:15px;
+justify-content:center;
+gap:20px;
+width:100%;
 }
 
-/* SELECT */
+/* ================= SELECT ================= */
 
 select{
 width:450px;
@@ -71,7 +94,7 @@ select.disabled{
 opacity:0.5;
 }
 
-/* BOUTON RANDOM */
+/* ================= RANDOM BUTTON ================= */
 
 .random-btn{
 width:70px;
@@ -90,7 +113,7 @@ background:limegreen;
 transform:scale(1.1);
 }
 
-/* BOUTON GENERER */
+/* ================= GENERATE BUTTON ================= */
 
 .generate-btn{
 padding:25px 80px;
@@ -108,6 +131,8 @@ transform:scale(1.1);
 box-shadow:0 0 40px yellow;
 }
 
+/* ================= TEXTAREA ================= */
+
 textarea{
 width:80%;
 height:250px;
@@ -116,6 +141,18 @@ border-radius:25px;
 font-size:20px;
 border:none;
 }
+
+/* ================= LOADING BAR ================= */
+
+#loadingBar{
+width:0%;
+height:8px;
+background:red;
+border-radius:10px;
+transition:width 0.5s ease;
+}
+
+/* ================= 3D BACKGROUND ================= */
 
 #three-container{
 position:fixed;
@@ -129,7 +166,6 @@ pointer-events:none;
 
 </style>
 </head>
-
 <body>
 
 <div id="three-container"></div>
@@ -171,6 +207,8 @@ pointer-events:none;
 
 <button class="generate-btn" onclick="generate()">🚀 GÉNÉRER</button>
 
+<div id="loadingBar"></div>
+
 <textarea id="output" placeholder="Ton prompt apparaît ici..."></textarea>
 
 </div>
@@ -197,8 +235,6 @@ fill("haut",hauts);
 fill("bas",bas);
 fill("fond",fonds);
 fill("angle",angles);
-
-/* AGE */
 
 let ageSelect=document.getElementById("age");
 for(let i=16;i<=70;i++){
@@ -237,13 +273,19 @@ select.classList.remove("disabled");
 
 async function generate(){
 
+document.getElementById("loadingBar").style.width="0%";
+
+setTimeout(()=>{
+document.getElementById("loadingBar").style.width="100%";
+},100);
+
 let data={
 genre:document.getElementById("genre").value,
 age:document.getElementById("age").value,
-haut:randomFields.haut ? "RANDOM" : document.getElementById("haut").value,
-bas:randomFields.bas ? "RANDOM" : document.getElementById("bas").value,
-fond:randomFields.fond ? "RANDOM" : document.getElementById("fond").value,
-angle:randomFields.angle ? "RANDOM" : document.getElementById("angle").value
+haut:randomFields.haut?"RANDOM":document.getElementById("haut").value,
+bas:randomFields.bas?"RANDOM":document.getElementById("bas").value,
+fond:randomFields.fond?"RANDOM":document.getElementById("fond").value,
+angle:randomFields.angle?"RANDOM":document.getElementById("angle").value
 };
 
 let res=await fetch("/generate",{
@@ -253,7 +295,10 @@ body:JSON.stringify(data)
 });
 
 let json=await res.json();
+
 document.getElementById("output").value=json.prompt;
+document.getElementById("loadingBar").style.width="0%";
+
 }
 
 /* ================= 3D BANANES ================= */
@@ -271,17 +316,33 @@ const light=new THREE.DirectionalLight(0xffffff,2);
 light.position.set(5,10,5);
 scene.add(light);
 
-const geometry=new THREE.SphereGeometry(1.2,32,32);
-const material=new THREE.MeshStandardMaterial({color:0xffdd00});
+/* 🍌 FORME BANANE */
+
+const bananaShape=new THREE.CapsuleGeometry(0.6,3,16,32);
+
+const bananaMaterial=new THREE.MeshStandardMaterial({
+color:0xffd500,
+roughness:0.3,
+metalness:0.2
+});
 
 let bananas=[];
 
 function spawnBanana(){
-const banana=new THREE.Mesh(geometry,material);
+
+const banana=new THREE.Mesh(bananaShape,bananaMaterial);
+banana.rotation.z=Math.PI/4;
+
 banana.position.x=(Math.random()-0.5)*20;
 banana.position.y=10+Math.random()*10;
 banana.position.z=(Math.random()-0.5)*10;
-banana.velocity={x:(Math.random()-0.5)*0.2,y:-0.05,z:(Math.random()-0.5)*0.2};
+
+banana.velocity={
+x:(Math.random()-0.5)*0.2,
+y:-0.05,
+z:(Math.random()-0.5)*0.2
+};
+
 scene.add(banana);
 bananas.push(banana);
 }
@@ -290,18 +351,32 @@ setInterval(()=>{if(bananas.length<60)spawnBanana();},200);
 
 function animate(){
 requestAnimationFrame(animate);
+
 bananas.forEach(b=>{
 b.velocity.y-=0.002;
 b.position.x+=b.velocity.x;
 b.position.y+=b.velocity.y;
 b.position.z+=b.velocity.z;
-if(b.position.y<-8){b.position.y=-8;b.velocity.y*=-0.7;}
+
+if(b.position.y<-8){
+b.position.y=-8;
+b.velocity.y*=-0.7;
+}
+
 b.rotation.x+=0.03;
 b.rotation.y+=0.03;
 });
+
 renderer.render(scene,camera);
 }
+
 animate();
+
+window.addEventListener("resize",()=>{
+camera.aspect=window.innerWidth/window.innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(window.innerWidth,window.innerHeight);
+});
 
 </script>
 
