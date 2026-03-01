@@ -8,163 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-<style>
-
-/* ================= BODY ================= */
-
-body{
-margin:0;
-overflow:hidden;
-background:radial-gradient(circle at center,#0f7a2d,#063d17);
-font-family:'Montserrat',sans-serif;
-}
-
-/* ================= TITRE ================= */
-
-.title{
-font-family:'Bungee',cursive;
-font-size:90px;
-text-align:center;
-color:white;
-margin-top:30px;
-animation:pulse 2s infinite alternate;
-}
-
-@keyframes pulse{
-from{text-shadow:0 0 20px yellow;}
-to{text-shadow:0 0 60px lime;}
-}
-
-/* Néon sous le titre */
-
-.title::after{
-content:"";
-display:block;
-width:60%;
-height:8px;
-margin:20px auto 0 auto;
-background:linear-gradient(90deg,yellow,red,yellow);
-filter:blur(15px);
-animation:neonMove 3s infinite alternate;
-}
-
-@keyframes neonMove{
-from{opacity:0.5;}
-to{opacity:1;}
-}
-
-/* ================= CONTAINER ================= */
-
-.container{
-position:relative;
-z-index:10;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-gap:25px;
-width:100%;
-}
-
-/* Ligne menu + bouton random */
-
-.menu-line{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:20px;
-width:100%;
-}
-
-/* ================= SELECT ================= */
-
-select{
-width:450px;
-padding:22px;
-font-size:26px;
-background:yellow;
-border-radius:20px;
-border:none;
-font-weight:bold;
-text-align:center;
-transition:0.3s;
-}
-
-select.disabled{
-opacity:0.5;
-}
-
-/* ================= RANDOM BUTTON ================= */
-
-.random-btn{
-width:70px;
-height:70px;
-font-size:30px;
-border-radius:20px;
-border:none;
-cursor:pointer;
-background:#444;
-color:white;
-transition:0.3s;
-}
-
-.random-btn.active{
-background:limegreen;
-transform:scale(1.1);
-}
-
-/* ================= GENERATE BUTTON ================= */
-
-.generate-btn{
-padding:25px 80px;
-font-size:32px;
-background:linear-gradient(45deg,red,orange);
-color:white;
-border:none;
-border-radius:40px;
-cursor:pointer;
-transition:0.3s;
-}
-
-.generate-btn:hover{
-transform:scale(1.1);
-box-shadow:0 0 40px yellow;
-}
-
-/* ================= TEXTAREA ================= */
-
-textarea{
-width:80%;
-height:250px;
-padding:25px;
-border-radius:25px;
-font-size:20px;
-border:none;
-}
-
-/* ================= LOADING BAR ================= */
-
-#loadingBar{
-width:0%;
-height:8px;
-background:red;
-border-radius:10px;
-transition:width 0.5s ease;
-}
-
-/* ================= 3D BACKGROUND ================= */
-
-#three-container{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-z-index:0;
-pointer-events:none;
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -181,25 +25,23 @@ pointer-events:none;
 
 <select id="age"></select>
 
-<!-- HAUT -->
+<!-- MENU LINES -->
+
 <div class="menu-line">
 <select id="haut"></select>
 <button class="random-btn" onclick="toggleRandom('haut')">🎲</button>
 </div>
 
-<!-- BAS -->
 <div class="menu-line">
 <select id="bas"></select>
 <button class="random-btn" onclick="toggleRandom('bas')">🎲</button>
 </div>
 
-<!-- FOND -->
 <div class="menu-line">
 <select id="fond"></select>
 <button class="random-btn" onclick="toggleRandom('fond')">🎲</button>
 </div>
 
-<!-- ANGLE -->
 <div class="menu-line">
 <select id="angle"></select>
 <button class="random-btn" onclick="toggleRandom('angle')">🎲</button>
@@ -209,7 +51,7 @@ pointer-events:none;
 
 <div id="loadingBar"></div>
 
-<textarea id="output" placeholder="Ton prompt apparaît ici..."></textarea>
+<textarea id="output" placeholder="Ton prompt apparaîtra ici..."></textarea>
 
 </div>
 
@@ -243,17 +85,11 @@ opt.textContent=i;
 ageSelect.appendChild(opt);
 }
 
-/* ================= RANDOM SYSTEM ================= */
+/* ================= RANDOM ================= */
 
-let randomFields={
-haut:false,
-bas:false,
-fond:false,
-angle:false
-};
+let randomFields={haut:false,bas:false,fond:false,angle:false};
 
 function toggleRandom(field){
-
 randomFields[field]=!randomFields[field];
 
 let select=document.getElementById(field);
@@ -266,7 +102,6 @@ select.classList.add("disabled");
 btn.classList.remove("active");
 select.classList.remove("disabled");
 }
-
 }
 
 /* ================= GENERATE ================= */
@@ -297,8 +132,8 @@ body:JSON.stringify(data)
 let json=await res.json();
 
 document.getElementById("output").value=json.prompt;
-document.getElementById("loadingBar").style.width="0%";
 
+document.getElementById("loadingBar").style.width="0%";
 }
 
 /* ================= 3D BANANES ================= */
@@ -319,7 +154,6 @@ scene.add(light);
 /* 🍌 FORME BANANE */
 
 const bananaShape=new THREE.CapsuleGeometry(0.6,3,16,32);
-
 const bananaMaterial=new THREE.MeshStandardMaterial({
 color:0xffd500,
 roughness:0.3,
