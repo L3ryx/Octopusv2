@@ -1,33 +1,166 @@
 body{
 margin:0;
-font-family:Arial;
-background:#0b5d1e;
-color:white;
-text-align:center;
+overflow:hidden;
+background:radial-gradient(circle at center,#0f7a2d,#063d17);
+font-family:'Montserrat',sans-serif;
 }
+
+/* ================= TITRE ================= */
+
+.title{
+font-family:'Bungee',cursive;
+font-size:90px;
+text-align:center;
+color:white;
+margin-top:30px;
+animation:pulse 2s infinite alternate;
+}
+
+.title::after{
+content:"";
+display:block;
+width:60%;
+height:8px;
+margin:20px auto 0 auto;
+background:linear-gradient(90deg,yellow,red,yellow);
+filter:blur(15px);
+}
+
+@keyframes pulse{
+from{text-shadow:0 0 20px yellow;}
+to{text-shadow:0 0 60px lime;}
+}
+
+/* ================= CONTAINER ================= */
 
 .container{
-display:flex;
-flex-direction:column;
+position:relative;
+z-index:10;
+
+display:grid;
+grid-template-columns:1fr;
+justify-items:center;
+
+gap:30px;
+
+width:100%;
+max-width:1000px;
+margin:0 auto;
+}
+
+/* ================= MENU ================= */
+
+.menu-line{
+display:grid;
+grid-template-columns:450px 80px;
+justify-content:center;
 align-items:center;
-gap:15px;
-padding:40px;
+gap:20px;
+width:100%;
+max-width:600px;
 }
 
-select, button, textarea{
-padding:10px;
-border-radius:10px;
-font-size:16px;
-border:none;
-}
+/* ================= SELECT ================= */
 
-button{
-background:yellow;
+select{
+width:100%;
+height:80px;
+
+padding:0 20px;
+
+font-size:26px;
 font-weight:bold;
-cursor:pointer;
+
+background:yellow;
+border-radius:20px;
+border:none;
+
+text-align:center;
+box-sizing:border-box;
+transition:0.3s;
 }
+
+select.disabled{
+opacity:0.5;
+}
+
+/* ================= RANDOM BUTTON ================= */
+
+.random-btn{
+width:80px;
+height:80px;
+
+font-size:30px;
+
+border-radius:20px;
+border:none;
+
+cursor:pointer;
+
+background:#222;
+color:white;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+flex-shrink:0;
+
+transition:0.3s;
+}
+
+.random-btn.active{
+background:limegreen;
+transform:scale(1.1);
+}
+
+/* ================= GENERATE ================= */
+
+.generate-btn{
+padding:25px 80px;
+font-size:32px;
+background:linear-gradient(45deg,red,orange);
+color:white;
+border:none;
+border-radius:40px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.generate-btn:hover{
+transform:scale(1.1);
+box-shadow:0 0 40px yellow;
+}
+
+/* ================= TEXTAREA ================= */
 
 textarea{
 width:80%;
-height:200px;
+height:250px;
+padding:25px;
+border-radius:25px;
+font-size:20px;
+border:none;
+}
+
+/* ================= LOADING BAR ================= */
+
+#loadingBar{
+width:0%;
+height:8px;
+background:red;
+border-radius:10px;
+transition:width 0.5s ease;
+}
+
+/* ================= 3D ================= */
+
+#three-container{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:0;
+pointer-events:none;
 }
