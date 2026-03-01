@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, "public")));
 ===================================================== */
 
 const HF_TOKEN = process.env.Banana;
-const HF_API = "https://api-inference.huggingface.co/models/gpt2";
+const HF_API = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2";
 
 /* =====================================================
    🎲 RANDOM UTILS
