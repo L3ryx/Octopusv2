@@ -25,7 +25,7 @@
 
 <select id="age"></select>
 
-<!-- MENU LINES -->
+<!-- MENUS -->
 
 <div class="menu-line">
 <select id="haut"></select>
@@ -47,7 +47,13 @@
 <button class="random-btn" onclick="toggleRandom('angle')">🎲</button>
 </div>
 
+<!-- ACTION BUTTONS -->
+
 <button class="generate-btn" onclick="generate()">🚀 GÉNÉRER</button>
+
+<button class="generate-btn" onclick="copyPrompt()">📋 COPIER</button>
+
+<button class="generate-btn" onclick="randomGlobal()">🎲 RANDOM GLOBAL</button>
 
 <div id="loadingBar"></div>
 
@@ -85,7 +91,7 @@ opt.textContent=i;
 ageSelect.appendChild(opt);
 }
 
-/* ================= RANDOM ================= */
+/* ================= RANDOM TOGGLE ================= */
 
 let randomFields={haut:false,bas:false,fond:false,angle:false};
 
@@ -102,6 +108,26 @@ select.classList.add("disabled");
 btn.classList.remove("active");
 select.classList.remove("disabled");
 }
+}
+
+/* ================= RANDOM GLOBAL ================= */
+
+function randomGlobal(){
+
+["haut","bas","fond","angle"].forEach(field=>{
+let select=document.getElementById(field);
+let options=select.options;
+select.selectedIndex=Math.floor(Math.random()*options.length);
+});
+
+}
+
+/* ================= COPY ================= */
+
+function copyPrompt(){
+let text=document.getElementById("output").value;
+navigator.clipboard.writeText(text);
+alert("✅ Prompt copié !");
 }
 
 /* ================= GENERATE ================= */
@@ -136,6 +162,24 @@ document.getElementById("output").value=json.prompt;
 document.getElementById("loadingBar").style.width="0%";
 }
 
+/* ================= PARTICULES ================= */
+
+function createParticles(){
+for(let i=0;i<20;i++){
+let p=document.createElement("div");
+p.classList.add("particle");
+p.style.left=Math.random()*100+"vw";
+p.style.animationDuration=(5+Math.random()*10)+"s";
+document.body.appendChild(p);
+
+setTimeout(()=>{
+p.remove();
+},15000);
+}
+}
+
+setInterval(createParticles,4000);
+
 /* ================= 3D BANANES ================= */
 
 const scene=new THREE.Scene();
@@ -150,8 +194,6 @@ scene.add(new THREE.AmbientLight(0xffffff,1.5));
 const light=new THREE.DirectionalLight(0xffffff,2);
 light.position.set(5,10,5);
 scene.add(light);
-
-/* 🍌 FORME BANANE */
 
 const bananaShape=new THREE.CapsuleGeometry(0.6,3,16,32);
 const bananaMaterial=new THREE.MeshStandardMaterial({
